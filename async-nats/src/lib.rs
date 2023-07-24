@@ -1407,12 +1407,12 @@ pub(crate) fn is_valid_subject<T: AsRef<str>>(subject: T) -> bool {
 }
 
 macro_rules! from_with_timeout {
-    ($t:ty, $k:ty, $origin: ty, $origin_kind: ty) => {
-        impl From<$origin> for $t {
-            fn from(err: $origin) -> Self {
+    ($target_kind:ty, $source_kind: ty) => {
+        impl From<NatsError<$source_kind>> for NatsError<$target_kind> {
+            fn from(err: NatsError<$source_kind>) -> Self {
                 match err.kind() {
-                    <$origin_kind>::TimedOut => Self::new(<$k>::TimedOut),
-                    _ => Self::with_source(<$k>::Other, err),
+                    <$source_kind>::TimedOut => Self::new(<$target_kind>::TimedOut),
+                    _ => Self::default_with_source(err),
                 }
             }
         }
