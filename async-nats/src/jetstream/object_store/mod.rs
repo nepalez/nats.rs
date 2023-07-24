@@ -1217,12 +1217,13 @@ impl Display for InfoErrorKind {
 
 pub type InfoError = Error<InfoErrorKind>;
 
-#[derive(Clone, Copy, Debug, PartialEq)]
+#[derive(Clone, Copy, Debug, Default, PartialEq)]
 pub enum GetErrorKind {
     InvalidName,
     ConsumerCreate,
     NotFound,
     BucketLink,
+    #[default]
     Other,
     TimedOut,
 }
@@ -1256,13 +1257,14 @@ impl From<InfoError> for GetError {
     }
 }
 
-#[derive(Clone, Copy, Debug, PartialEq)]
+#[derive(Clone, Copy, Debug, Default, PartialEq)]
 pub enum DeleteErrorKind {
     TimedOut,
     NotFound,
     Metadata,
     InvalidName,
     Chunks,
+    #[default]
     Other,
 }
 
@@ -1389,10 +1391,11 @@ impl From<PublishMetadataError> for PutError {
     }
 }
 
-#[derive(Clone, Copy, Debug, PartialEq)]
+#[derive(Clone, Copy, Debug, Default, PartialEq)]
 pub enum WatchErrorKind {
     TimedOut,
     ConsumerCreate,
+    #[default]
     Other,
 }
 

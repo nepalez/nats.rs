@@ -65,6 +65,21 @@ where
     }
 }
 
+impl<Kind> Error<Kind>
+where
+    Kind: ErrorKind + Default,
+{
+    pub(crate) fn default_with_source<S>(source: S) -> Self
+    where
+        S: Into<crate::Error>,
+    {
+        Self {
+            kind: Kind::default(),
+            source: Some(source.into()),
+        }
+    }
+}
+
 impl<Kind> std::error::Error for Error<Kind>
 where
     Kind: ErrorKind,
@@ -111,9 +126,10 @@ mod test {
     use std::fmt::Formatter;
 
     // Define a custom error kind as a public enum
-    #[derive(Clone, Debug, PartialEq)]
+    #[derive(Clone, Debug, Default, PartialEq)]
     enum FooErrorKind {
         Bar,
+        #[default]
         Baz,
     }
 
@@ -141,6 +157,14 @@ mod test {
         let source = std::io::Error::new(std::io::ErrorKind::Other, "foo");
         let error = FooError::with_source(FooErrorKind::Bar, source);
         assert_eq!(error.kind, FooErrorKind::Bar);
+        assert_eq!(error.source.unwrap().to_string(), "foo");
+    }
+
+    #[test]
+    fn default_with_source() {
+        let source = std::io::Error::new(std::io::ErrorKind::Other, "foo");
+        let error = FooError::default_with_source(source);
+        assert_eq!(error.kind(), FooErrorKind::Baz);
         assert_eq!(error.source.unwrap().to_string(), "foo");
     }
 

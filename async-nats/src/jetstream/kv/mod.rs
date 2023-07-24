@@ -1049,10 +1049,11 @@ impl Display for PutErrorKind {
 
 pub type PutError = Error<PutErrorKind>;
 
-#[derive(Clone, Copy, Debug, PartialEq)]
+#[derive(Clone, Copy, Debug, Default, PartialEq)]
 pub enum EntryErrorKind {
     InvalidKey,
     TimedOut,
+    #[default]
     Other,
 }
 
@@ -1075,11 +1076,12 @@ crate::from_with_timeout!(
     DirectGetErrorKind
 );
 
-#[derive(Clone, Copy, Debug, PartialEq)]
+#[derive(Clone, Copy, Debug, Default, PartialEq)]
 pub enum WatchErrorKind {
     InvalidKey,
     TimedOut,
     ConsumerCreate,
+    #[default]
     Other,
 }
 
@@ -1099,10 +1101,11 @@ pub type WatchError = Error<WatchErrorKind>;
 crate::from_with_timeout!(WatchError, WatchErrorKind, ConsumerError, ConsumerErrorKind);
 crate::from_with_timeout!(WatchError, WatchErrorKind, StreamError, StreamErrorKind);
 
-#[derive(Clone, Copy, Debug, PartialEq)]
+#[derive(Clone, Copy, Debug, Default, PartialEq)]
 pub enum UpdateErrorKind {
     InvalidKey,
     TimedOut,
+    #[default]
     Other,
 }
 
